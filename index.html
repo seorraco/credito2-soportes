@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estación de Soportes · CREDITO2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#161616; --ink-2:#2B2B2B;
+    --paper:#F4F4F5; --card:#FFFFFF; --line:#E5E5E5;
+    --text:#1A1A1A; --muted:#6B6B6B;
+    --gold:#C1121F; --gold-soft:#FBE9EA;
+    --ok:#2C7A66; --ok-soft:#DCEDE7;
+    --warn:#B3541E; --err:#B23A48; --err-soft:#F4E0E2;
+    --font-display:'Space Grotesk',system-ui,sans-serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+    --r:14px; --r-sm:9px;
+    --shadow:0 1px 2px rgba(16,42,48,.06),0 8px 30px rgba(16,42,48,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--font-body);color:var(--text);
+    background:var(--paper);
+    -webkit-font-smoothing:antialiased;line-height:1.45;
+  }
+  button{font-family:inherit;cursor:pointer}
+  input{font-family:inherit}
+  .mono{font-family:var(--font-mono)}
+  .hidden{display:none !important}
+
+  /* ---------- LOGIN ---------- */
+  #login{min-height:100%;display:grid;grid-template-columns:1fr;}
+  @media(min-width:880px){ #login{grid-template-columns:minmax(380px,46%) 1fr;} }
+
+  .brand-panel{
+    background:linear-gradient(155deg,var(--ink) 0%,var(--ink-2) 100%);
+    color:#F1F1F2;padding:34px 30px;position:relative;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:space-between;gap:40px;
+  }
+  .brand-panel::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      repeating-linear-gradient(90deg,rgba(190,123,46,.07) 0 1px,transparent 1px 46px),
+      radial-gradient(120% 80% at 100% 0,rgba(190,123,46,.16),transparent 55%);
+  }
+  .brand-top{position:relative;z-index:1}
+  .wordmark{display:flex;align-items:center;gap:11px;font-family:var(--font-display);font-weight:700;letter-spacing:.5px}
+  .wordmark .dot{width:11px;height:11px;border-radius:3px;background:var(--gold);box-shadow:0 0 0 4px rgba(190,123,46,.18)}
+  .wordmark b{font-size:18px}
+  .wordmark span{color:#9AA0A0;font-weight:500;font-size:13px;letter-spacing:1.5px;text-transform:uppercase}
+  .brand-hero{position:relative;z-index:1;max-width:380px}
+  .brand-hero h1{font-family:var(--font-display);font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.08;letter-spacing:-.5px}
+  .brand-hero h1 em{font-style:normal;color:var(--gold)}
+  .brand-hero p{margin-top:14px;color:#A9BCBB;font-size:14.5px;max-width:330px}
+  .brand-foot{position:relative;z-index:1;display:flex;gap:8px;flex-wrap:wrap}
+  .tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.5px;color:#BBD0CF;
+    border:1px solid rgba(255,255,255,.16);padding:5px 9px;border-radius:6px}
+
+  .login-side{display:flex;align-items:center;justify-content:center;padding:36px 22px}
+  .login-card{width:100%;max-width:380px}
+  .login-card .kicker{font-family:var(--font-mono);font-size:11.5px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .login-card h2{font-family:var(--font-display);font-weight:600;font-size:25px;margin:8px 0 4px;letter-spacing:-.3px}
+  .login-card .sub{color:var(--muted);font-size:14px;margin-bottom:26px}
+  .field{margin-bottom:15px}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:#3E5256;margin-bottom:6px;letter-spacing:.2px}
+  .field input{
+    width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:var(--r-sm);
+    background:#fff;font-size:15px;color:var(--text);transition:border-color .15s,box-shadow .15s;
+  }
+  .field input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(16,42,48,.12)}
+  .btn{
+    width:100%;padding:13px;border:none;border-radius:var(--r-sm);background:var(--ink);color:#fff;
+    font-weight:600;font-size:15px;letter-spacing:.2px;transition:transform .08s,background .15s;
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  }
+  .btn:hover{background:#0A1F24}
+  .btn:active{transform:translateY(1px)}
+  .btn[disabled]{opacity:.6;cursor:not-allowed}
+  .login-err{
+    margin-top:14px;font-size:13px;color:var(--err);background:var(--err-soft);
+    border:1px solid #E7C3C7;padding:9px 11px;border-radius:8px;
+  }
+  .login-meta{margin-top:22px;font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:7px}
+  .login-meta .pip{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+
+  /* ---------- APP ---------- */
+  #app{min-height:100%;display:flex;flex-direction:column}
+  .topbar{
+    background:var(--ink);color:#F1F1F2;display:flex;align-items:center;justify-content:space-between;
+    padding:12px 18px;gap:12px;position:sticky;top:0;z-index:5;
+  }
+  .topbar .wordmark b{font-size:15px}
+  .topbar .wordmark span{font-size:11px}
+  .user-chip{display:flex;align-items:center;gap:10px}
+  .user-chip .who{display:flex;flex-direction:column;line-height:1.2;text-align:right}
+  .user-chip .who b{font-size:13px;font-weight:600}
+  .user-chip .who small{font-size:11px;color:#9AA0A0;font-family:var(--font-mono)}
+  .btn-ghost{
+    background:transparent;border:1px solid rgba(255,255,255,.22);color:#F1F1F2;
+    padding:7px 13px;border-radius:8px;font-size:13px;font-weight:500;
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,.08)}
+
+  .wrap{width:100%;max-width:960px;margin:0 auto;padding:26px 18px 60px}
+  .page-head{margin-bottom:22px}
+  .page-head .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .page-head h1{font-family:var(--font-display);font-weight:600;font-size:24px;margin-top:6px;letter-spacing:-.3px}
+  .page-head p{color:var(--muted);font-size:14px;margin-top:5px;max-width:560px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+  .card+.card{margin-top:18px}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+  .card-head h3{font-family:var(--font-display);font-weight:600;font-size:15.5px;letter-spacing:.1px}
+  .card-body{padding:18px}
+
+  /* connection status */
+  .conn{display:flex;align-items:center;gap:14px}
+  .conn .light{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex:none;background:var(--ok-soft)}
+  .conn .light .core{width:13px;height:13px;border-radius:50%;background:var(--ok)}
+  .conn.is-checking .light{background:#F0F0F0}
+  .conn.is-checking .light .core{background:var(--muted);animation:pulse 1s ease-in-out infinite}
+  .conn.is-error .light{background:var(--err-soft)}
+  .conn.is-error .light .core{background:var(--err);animation:none}
+  @keyframes pulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+  @media(prefers-reduced-motion:reduce){.conn .light .core{animation:none !important}}
+  .conn .info{flex:1;min-width:0}
+  .conn .info .state{font-weight:600;font-size:15px}
+  .conn .info .detail{font-size:12.5px;color:var(--muted);font-family:var(--font-mono);margin-top:2px;word-break:break-all}
+  .conn-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  @media(max-width:520px){.conn-meta{grid-template-columns:1fr}}
+  .meta-cell{border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 12px;background:#FAFAFA}
+  .meta-cell .k{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .meta-cell .v{font-family:var(--font-mono);font-size:13px;margin-top:3px;color:var(--text);word-break:break-all}
+  .btn-sm{background:var(--paper);border:1px solid var(--line);color:var(--text);padding:7px 12px;border-radius:8px;font-size:12.5px;font-weight:600}
+  .btn-sm:hover{background:#DEE5E4}
+
+  /* workflow ledger */
+  .steps{list-style:none}
+  .step{display:flex;gap:14px;padding:14px 0;border-bottom:1px dashed var(--line)}
+  .step:last-child{border-bottom:none;padding-bottom:0}
+  .step .num{flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
+    font-family:var(--font-mono);font-weight:600;font-size:13px;border:1px solid var(--line);color:var(--muted);background:#FAFAFA}
+  .step.done .num{background:var(--ok);border-color:var(--ok);color:#fff}
+  .step.active .num{background:var(--gold);border-color:var(--gold);color:#fff}
+  .step .txt{flex:1}
+  .step .txt b{font-size:14.5px;font-weight:600;display:block}
+  .step .txt small{color:var(--muted);font-size:12.5px}
+  .step .badge{flex:none;align-self:center;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;padding:4px 8px;border-radius:6px;font-weight:600}
+  .badge.b-done{background:var(--ok-soft);color:var(--ok)}
+  .badge.b-active{background:var(--gold-soft);color:#8A551A}
+  .badge.b-soon{background:#F0F0F0;color:var(--muted)}
+
+  .foot-note{margin-top:24px;font-size:12px;color:var(--muted);text-align:center;font-family:var(--font-mono)}
+</style>
+</head>
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<section id="login">
+  <aside class="brand-panel">
+    <div class="brand-top">
+      <div class="wordmark"><span class="dot"></span><b>CREDITO2</b><span>SAS</span></div>
+    </div>
+    <div class="brand-hero">
+      <h1>Estación de <em>Soportes</em></h1>
+      <p>Extrae firma y huella de la cédula, consolida los documentos y genera el QR del expediente — todo listo para la solicitud de crédito.</p>
+    </div>
+    <div class="brand-foot">
+      <span class="tag">LEY 1527 · LIBRANZA</span>
+      <span class="tag">SUPABASE</span>
+      <span class="tag">v0.1</span>
+    </div>
+  </aside>
+
+  <div class="login-side">
+    <div class="login-card">
+      <div class="kicker">Acceso analista</div>
+      <h2>Iniciar sesión</h2>
+      <p class="sub">Ingresa con las credenciales de la mesa de trabajo.</p>
+
+      <div class="field">
+        <label for="usuario">Usuario</label>
+        <input id="usuario" class="mono" type="text" inputmode="numeric" autocomplete="username" placeholder="Cédula del analista">
+      </div>
+      <div class="field">
+        <label for="clave">Contraseña</label>
+        <input id="clave" type="password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button id="btnLogin" class="btn">Entrar</button>
+      <div id="loginErr" class="login-err hidden"></div>
+
+      <div class="login-meta"><span class="pip"></span> Sesión local · uso interno CREDITO2</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== APP ===================== -->
+<main id="app" class="hidden">
+  <header class="topbar">
+    <div class="wordmark"><span class="dot"></span><b>CREDITO2</b><span>SOPORTES</span></div>
+    <div class="user-chip">
+      <div class="who"><b id="whoName">Analista</b><small id="whoId">—</small></div>
+      <button id="btnLogout" class="btn-ghost">Salir</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="page-head">
+      <div class="eyebrow">Paso 1 · Base</div>
+      <h1>Mesa de trabajo</h1>
+      <p>Conexión con la base de datos y el almacenamiento de expedientes. Cuando esté en verde, seguimos con la carga de la cédula.</p>
+    </div>
+
+    <!-- Connection -->
+    <div class="card">
+      <div class="card-head">
+        <h3>Conexión</h3>
+        <button id="btnRetry" class="btn-sm">Probar de nuevo</button>
+      </div>
+      <div class="card-body">
+        <div id="conn" class="conn is-checking">
+          <div class="light"><span class="core"></span></div>
+          <div class="info">
+            <div class="state" id="connState">Verificando conexión…</div>
+            <div class="detail" id="connDetail">Consultando almacenamiento</div>
+          </div>
+        </div>
+        <div class="conn-meta">
+          <div class="meta-cell"><div class="k">Proyecto</div><div class="v" id="mProj">—</div></div>
+          <div class="meta-cell"><div class="k">Bucket</div><div class="v" id="mBucket">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workflow -->
+    <div class="card">
+      <div class="card-head"><h3>Flujo de trabajo</h3></div>
+      <div class="card-body">
+        <ul class="steps">
+          <li class="step done">
+            <div class="num">1</div>
+            <div class="txt"><b>Base y conexión</b><small>Login compartido + Supabase Storage</small></div>
+            <span class="badge b-done">Listo</span>
+          </li>
+          <li class="step active">
+            <div class="num">2</div>
+            <div class="txt"><b>Cédula → firma y huella</b><small>Cargar cédula (PDF/imagen), detectar y ajustar recortes</small></div>
+            <span class="badge b-active">Siguiente</span>
+          </li>
+          <li class="step">
+            <div class="num">3</div>
+            <div class="txt"><b>Documentos + QR</b><small>Cédula, validación de identidad y análisis de crédito → QR del expediente</small></div>
+            <span class="badge b-soon">Pendiente</span>
+          </li>
+          <li class="step">
+            <div class="num">4</div>
+            <div class="txt"><b>Guardado en carpeta</b><small>Firma, huella y QR ordenados por cliente en Supabase</small></div>
+            <span class="badge b-soon">Pendiente</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="foot-note" id="footNote">CREDITO2 · Estación de Soportes</p>
+  </div>
+</main>
+
+<script>
+/* ============== CONFIGURACIÓN ============== */
+const CONFIG = {
+  SUPABASE_URL: "https://ouqwxdbcexbirwjleaxi.supabase.co",
+  SUPABASE_ANON: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91cXd4ZGJjZXhiaXJ3amxlYXhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNjA4MDIsImV4cCI6MjA5NjYzNjgwMn0.itWdhifZFyAMpoIa5viUXdEfFmIt0SsAVZ4VDTyzRw8",
+  BUCKET: "expedientes",
+  // Credenciales compartidas (uso interno). Cambia aquí cuando quieras.
+  AUTH: { usuario: "79760506", clave: "Credito2+$", nombre: "Analista CREDITO2" }
+};
+
+/* ============== SESIÓN (degrada a memoria si no hay storage) ============== */
+const _mem = {};
+const store = {
+  get(k){ try{ return sessionStorage.getItem(k); }catch(e){ return k in _mem ? _mem[k] : null; } },
+  set(k,v){ try{ sessionStorage.setItem(k,v); }catch(e){ _mem[k]=v; } },
+  del(k){ try{ sessionStorage.removeItem(k); }catch(e){ delete _mem[k]; } }
+};
+
+const $ = id => document.getElementById(id);
+
+/* ============== LOGIN ============== */
+function showLoginError(msg){
+  const el = $("loginErr"); el.textContent = msg; el.classList.remove("hidden");
+}
+function doLogin(){
+  const u = $("usuario").value.trim();
+  const c = $("clave").value;
+  if(!u || !c){ showLoginError("Ingresa usuario y contraseña."); return; }
+  if(u === CONFIG.AUTH.usuario && c === CONFIG.AUTH.clave){
+    store.set("ses_user", u);
+    store.set("ses_name", CONFIG.AUTH.nombre);
+    enterApp(u, CONFIG.AUTH.nombre);
+  } else {
+    showLoginError("Usuario o contraseña incorrectos.");
+    $("clave").value = "";
+  }
+}
+function doLogout(){
+  store.del("ses_user"); store.del("ses_name");
+  $("app").classList.add("hidden");
+  $("login").classList.remove("hidden");
+  $("usuario").value=""; $("clave").value="";
+  $("loginErr").classList.add("hidden");
+}
+
+/* ============== ENTRAR A LA APP ============== */
+function enterApp(user, name){
+  $("login").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  $("whoName").textContent = name || "Analista";
+  $("whoId").textContent = user;
+  const ref = CONFIG.SUPABASE_URL.replace("https://","").split(".")[0];
+  $("mProj").textContent = ref;
+  $("mBucket").textContent = CONFIG.BUCKET;
+  checkConnection();
+}
+
+/* ============== VERIFICAR CONEXIÓN (Storage REST) ============== */
+async function checkConnection(){
+  const conn = $("conn");
+  conn.className = "conn is-checking";
+  $("connState").textContent = "Verificando conexión…";
+  $("connDetail").textContent = "Consultando almacenamiento";
+  const t0 = performance.now();
+  try{
+    const res = await fetch(`${CONFIG.SUPABASE_URL}/storage/v1/object/list/${CONFIG.BUCKET}`,{
+      method:"POST",
+      headers:{
+        "apikey": CONFIG.SUPABASE_ANON,
+        "Authorization": "Bearer "+CONFIG.SUPABASE_ANON,
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({ prefix:"", limit:1, offset:0 })
+    });
+    const ms = Math.round(performance.now()-t0);
+    if(res.ok){
+      const data = await res.json();
+      const n = Array.isArray(data) ? data.length : 0;
+      conn.className = "conn is-ok";
+      $("connState").textContent = "Conectado";
+      $("connDetail").textContent = `Storage accesible · ${ms} ms · bucket con ${n>0?"contenido":"0 objetos visibles"}`;
+    } else {
+      const body = await res.text();
+      conn.className = "conn is-error";
+      $("connState").textContent = "Sin acceso al almacenamiento";
+      $("connDetail").textContent = `HTTP ${res.status} · ${body.slice(0,90)}`;
+    }
+  }catch(err){
+    conn.className = "conn is-error";
+    $("connState").textContent = "No se pudo conectar";
+    $("connDetail").textContent = String(err.message || err).slice(0,120);
+  }
+}
+
+/* ============== EVENTOS ============== */
+$("btnLogin").addEventListener("click", doLogin);
+$("clave").addEventListener("keydown", e=>{ if(e.key==="Enter") doLogin(); });
+$("usuario").addEventListener("keydown", e=>{ if(e.key==="Enter") $("clave").focus(); });
+$("btnLogout").addEventListener("click", doLogout);
+$("btnRetry").addEventListener("click", checkConnection);
+
+/* ============== AUTO-SESIÓN ============== */
+(function init(){
+  const u = store.get("ses_user");
+  if(u){ enterApp(u, store.get("ses_name")); }
+})();
+</script>
+<script>
+/* === SSO CREDITO2 (defensivo: sin código o si falla -> login normal) === */
+(function(){
+  function getCode(){ try{ var u=new URL(location.href); var c=u.searchParams.get("sso");
+    if(!c && u.hash){ var m=u.hash.match(/sso=([^&]+)/); if(m) c=decodeURIComponent(m[1]); } return c; }catch(e){ return null; } }
+  function limpiar(){ try{ var u=new URL(location.href); u.searchParams.delete("sso"); history.replaceState(null,"",u.pathname+(u.search||"")); }catch(e){} }
+  async function run(){
+    var code=getCode(); if(!code) return;
+    try{
+      var r=await fetch(CONFIG.SUPABASE_URL+"/rest/v1/rpc/portal_sso_validar",{method:"POST",
+        headers:{apikey:CONFIG.SUPABASE_ANON,Authorization:"Bearer "+CONFIG.SUPABASE_ANON,"Content-Type":"application/json"},
+        body:JSON.stringify({p_codigo:code})});
+      if(!r.ok) return;
+      var rows=await r.json(); if(!rows||!rows.length) return;
+      var idr=rows[0];
+      store.set("ses_user", idr.usuario);
+      store.set("ses_name", idr.nombre||idr.usuario);
+      if(typeof enterApp==="function") enterApp(idr.usuario, idr.nombre||idr.usuario);
+      limpiar();
+    }catch(e){}
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",run); else run();
+})();
+</script>
+<div id="c2-ver" style="position:fixed;bottom:8px;right:10px;display:flex;align-items:center;gap:6px;font-size:11px;line-height:1;color:#6B6B6B;background:rgba(255,255,255,.92);padding:5px 9px;border-radius:9px;border:1px solid #E5E5E5;box-shadow:0 1px 3px rgba(0,0,0,.08);z-index:2147483000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;pointer-events:none;"><span style="width:6px;height:6px;border-radius:50%;background:#C1121F;display:inline-block;"></span>Versión 2026-06-15 · SSO + marca</div>
+</body>
+</html>
